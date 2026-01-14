@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FSD-1 Chapter 2 Quiz - HTML Structure and Core Tags</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .progress-container {
+            padding: 20px 30px;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #f093fb 0%, #f5576c 100%);
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .progress-text {
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+        }
+
+        .quiz-content {
+            padding: 40px 30px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .question-container {
+            margin-bottom: 30px;
+        }
+
+        .question-number {
+            color: #f5576c;
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .question-text {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 25px;
+            line-height: 1.6;
+            font-weight: 500;
+            white-space: pre-wrap;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .option {
+            padding: 18px 20px;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            background: white;
+            position: relative;
+            word-wrap: break-word;
+        }
+
+        .option:hover:not(.correct):not(.wrong):not(.disabled) {
+            border-color: #f5576c;
+            background: #fff5f7;
+            transform: translateX(5px);
+        }
+
+        .option.selected:not(.correct):not(.wrong) {
+            border-color: #f5576c;
+            background: #ffe8ec;
+        }
+
+        .option.correct {
+            border-color: #28a745;
+            background: #d4edda;
+            color: #155724;
+            cursor: default;
+        }
+
+        .option.wrong {
+            border-color: #dc3545;
+            background: #f8d7da;
+            color: #721c24;
+            cursor: default;
+        }
+
+        .option.disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .option::before {
+            content: '';
+            width: 20px;
+            height: 20px;
+            border: 2px solid #dee2e6;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 12px;
+            vertical-align: middle;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .option.selected::before {
+            border-color: #f5576c;
+            background: #f5576c;
+        }
+
+        .option.correct::before {
+            content: '✓';
+            border-color: #28a745;
+            background: #28a745;
+            color: white;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .option.wrong::before {
+            content: '✗';
+            border-color: #dc3545;
+            background: #dc3545;
+            color: white;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 14px 32px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(245, 87, 108, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: #5a6268;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .result-container {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .result-score {
+            font-size: 72px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+        }
+
+        .result-message {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .result-details {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .result-feedback {
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        .result-feedback.excellent {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .result-feedback.good {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .result-feedback.average {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .result-feedback.poor {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 22px;
+            }
+
+            .question-text {
+                font-size: 16px;
+            }
+
+            .option {
+                padding: 15px;
+                font-size: 14px;
+            }
+
+            .navigation-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #e83e8c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📝 Full Stack Development - Chapter 2 Quiz</h1>
+            <p>HTML Structure and Core Tags</p>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text" id="progressText">Question 1 of 61</div>
+        </div>
+
+        <div class="quiz-content" id="quizContent"></div>
+    </div>
+
+    <script>
+        const quizData = [
+            {
+                question: "Which attribute of <meta> tag is used to automatically refresh the page?",
+                options: [
+                    "http-equiv",
+                    "content",
+                    "name",
+                    "refresh"
+                ],
+                correct: 0
+            },
+            {
+                question: "Which tag is used to display power in expression",
+                options: [
+                    "<big>",
+                    "<sub>",
+                    "<sup>",
+                    "<superscript>"
+                ],
+                correct: 2
+            },
+            {
+                question: "Which is the correct HTML statement to display formula in a paragraph?\n(c₂H₃O₂)²",
+                options: [
+                    "(c<sub>2</sub>H<sub>3</sub>O<sub>2</sub>) <sup>2</sup>",
+                    "c<sub>2</sub>H<sub>3(</sub>O<sub>2</sub>) <sup>2</sup>",
+                    "(c<sub>2</sub>H<sub>3</sub>O<sub>2</sub><sup>2</sup>)",
+                    "(c<sup>2</sup>H<sup>3</sup>O<sup>2</sup>) <sub>2</sub>"
+                ],
+                correct: 0
+            },
+            {
+                question: "In HTML, which attribute is used to create a link that opens in a new window tab?",
+                options: [
+                    'src="_blank"',
+                    'alt="_blank"',
+                    'target="_self"',
+                    'target="_blank"'
+                ],
+                correct: 3
+            },
+            {
+                question: "Which of the following is way to start an ordered list with capital alphabets C?",
+                options: [
+                    '<ol type="1" start="3">',
+                    '<ol type="A" start="3">',
+                    '<ol type="a" new="3">',
+                    '<ol type="A" begin="4">'
+                ],
+                correct: 1
+            },
+            {
+                question: "__________attribute is used to defines the space between a table cell's border and the content present in it.",
+                options: [
+                    "caption",
+                    "cellspacing",
+                    "cellpadding",
+                    "margin"
+                ],
+                correct: 2
+            },
+            {
+                question: "Which of the following is way to start an ordered list with capital alphabets with the count of numeric value 4?",
+                options: [
+                    '<ol type="1" start="4">',
+                    '<ol type="a" new="4">',
+                    '<ol type="A" start="4">',
+                    '<ol type="A" begin="4">'
+                ],
+                correct: 2
+            },
+            {
+                question: "Which of the following type is not supported in <ol> tag?",
+                options: [
+                    'type="I"',
+                    'type="A"',
+                    'type="$"',
+                    'type="a"'
+                ],
+                correct: 2
+            },
+            {
+                question: "Which of the following is the correct specification of <meta> tag?",
+                options: [
+                    '<meta name="http-equiv" content="refresh" time="8"/>',
+                    '<meta http-equiv="refresh" content="8"/>',
+                    '<meta name="description" value="about full stack"/>',
+                    '<meta name="keyword" value="Full Stack"/>'
+                ],
+                correct: 1
+            },
+            {
+                question: 'What is the output of following code:\n<span style="color:blue;background-color:yellow;font-size:10px"> blue eyes </span>',
+                options: [
+                    "blue eyes is written in blue font color having yellow background & font is of 10px size.",
+                    "Blue eyes is written as simple word",
+                    "Blue eyes is written in yellow color having blue background & font is of 10px size.",
+                    "Blue eyes is written in blue font color having yellow background only."
+                ],
+                correct: 0
+            },
+            {
+                question: "Which is allowed attribute value to start numbers from 3 in ordered list?",
+                options: [
+                    '<ol start="3">',
+                    '<ol starting="3">',
+                    '<ol st="3">',
+                    '<ol start no="3">'
+                ],
+                correct: 0
+            },
+            {
+                question: "If the image you are loading in the web page is not available, then you want a text to appear in the image placeholder, which attribute lets you define this text?",
+                options: [
+                    "src",
+                    "align",
+                    "text",
+                    "alt"
+                ],
+                correct: 3
+            },
+            {
+                question: "The correct sequence of HTML tags for starting a web page is ______",
+                options: [
+                    "head, title, html, body",
+                    "html, body, title, head",
+                    "html, head, title, body",
+                    "html, head, body, title"
+                ],
+                correct: 2
+            },
+            {
+                question: "Which tag is used to render bold text?",
+                options: [
+                    "<em>",
+                    "<b>",
+                    "<strong>",
+                    "Both B and C"
+                ],
+                correct: 3
+            },
+            {
+                question: "Which tag is used to insert largest heading?",
+                options: [
+                    "<h1>",
+                    "<h2>",
+                    "<h3>",
+                    "<h4>"
+                ],
+                correct: 0
+            },
+            {
+                question: "Which of the following is the correct syntax for YouTube video?",
+                options: [
+                    '<iframe width="500" height="500" src="https://www.youtube.com/QqcB_OqKTU"></iframe>',
+                    '<iframe width="500" height="500" src="https://www.youtube.com/embed/QqcB_OqKTU"></iframe>',
+                    '<video width="500" height="500" src="https://www.youtube.com/embed/QqcB_OqKTU"></video>',
+                    '<iframe width="500" height="500" href="https://www.google.com/embed/QqcB_OqKTU"></iframe>'
+                ],
+                correct: 1
+            },
+            {
+                question: "Which Boolean attribute if specified, will allow video automatically seek back to the start after reaching at the end?",
+                options: [
+                    "controls",
+                    "autoplay",
+                    "loop",
+                    "embed"
+                ],
+                correct: 2
+            },
+            {
+                question: "Which of the following is/are Non semantic elements?",
+                options: [
+                    "<div>",
+                    "article",
+                    "header",
+                    "footer"
+                ],
+                correct: 0
+            },
+            {
+                question: "Which of the following element is not a semantic element?",
+                options: [
+                    "<header>",
+                    "<footer>",
+                    "<aside>",
+                    "<a>"
+                ],
+                correct: 3
+            },
+            {
+                question: "If user want to add multiple media file as audio & video then which element is used for it?",
+                options: [
+                    "<audio>",
+                    "<canvas>",
+                    "<svg>",
+                    "<source>"
+                ],
+                correct: 3
+            },
+            {
+                question: "If this attribute is present, it will allow the user to control audio playback, including volume, seeking, and pause/resume playback.",
+                options: [
+                    "controls",
+                    "src",
+                    "source",
+                    "autoplay"
+                ],
+                correct: 0
+            },
+            {
+                question: "Which HTML5 element defines video or movie content?",
+                options: [
+                    "<video>",
+                    "<media>",
+                    "<audio>",
+                    "<movie>"
+                ],
+                correct: 0
+            },
+            {
+                question: "Which browser does the HTML5 supports?",
+                options: [
+                    "Firefox",
+                    "Safari",
+                    "Internet Explorer",
+                    "All the mentioned"
+                ],
+                correct: 3
+            },
+            {
+                question: "The following elements <aside>, <article> are the new elements in HTML5. These elements are called,",
+                options: [
+                    "Semantic elements",
+                    "Graphic elements",
+                    "Control attributes",
+                    "Multimedia elements"
+                ],
+                correct: 0
+            },
+            {
+                question: "Which boolean attribute if specified, the audio will automatically begin to play back as soon as it can do so without stopping to finish loading the data?",
+                options: [
+                    "loop",
+                    "preload",
+                    "autobuffer",
+                    "autoplay"
+                ],
+                correct: 3
+            },
+            {
+                question: "Which is true about 'audio' tag in HTML5?",
+                options: [
+                    "HTML5 supports <audio> tag which is used to embed sound content in an HTML",
+                    "The current HTML5 draft specification does not specify which audio",
+                    "both of these",
+                    "none of these"
+                ],
+                correct: 2
+            },
+            {
+                question: "__________ is the attribute of video element which mutes the video on loading.",
+                options: [
+                    "mute",
+                    "muted",
+                    "audio",
+                    "voice"
+                ],
+                correct: 1
+            },
+            {
+                question: "To insert a video, we use a video tag and set its src attribute to a local or remote URL containing a playable movie. State True/False.",
+                options: [
+                    "TRUE",
+                    "FALSE"
+                ],
+                correct: 0
+            },
+            {
+                question: "HTML5 brings to the Web video and audio tracks without needing plugins. State True/False.",
+                options: [
+                    "TRUE",
+                    "FALSE"
+                ],
+                correct: 0
+            },
+            {
+                question: "Which value is there for autoplaying the YouTube video?",
+                options: [
+                    "0",
+                    "1",
+                    "2",
+                    "Infinite"
+                ],
+                correct: 1
+            },
+            {
+                question: "Which element is used for YouTube videos?",
+                options: [
+                    "<frame>",
+                    "<iframe>",
+                    "<samp>",
+                    "<small>"
+                ],
+                correct: 1
+            },
+            {
+                question: "Which value of loop parameter is to be set for looping the YouTube video?",
+                options: [
+                    "0",
+                    "1",
+                    "2",
+                    "loop"
+                ],
+                correct: 1
+            },
+            {
+                question: "Which tag represents a piece of content that is only slightly related to the rest of the page in HTML5?",
+                options: [
+                    "<header>",
+                    "<aside>",
+                    "<article>",
+                    "<section>"
+                ],
+                correct: 1
+            },
+            {
+                question: "Which of the following element is used as a container for content?",
+                options: [
+                    "<footer>",
+                    "<header>",
+                    "<aside>",
+                    "<article>"
+                ],
+                correct: 2
+            },
+            {
+                question: "Which element represents self-contained composition in document?",
+                options: [
+                    "<footer>",
+                    "<header>",
+                    "<article>",
+                    "<meter>"
+                ],
+                correct: 2
+            },
+            {
+                question: "An Article element contains -",
+                options: [
+                    "Image",
+                    "Video",
+                    "Text or embedded content",
+                    "ALL the mentioned"
+                ],
+                correct: 3
+            },
+            {
+                question: "Which element is used to define a discrete unit of content such as a blogpost, comment, and so on?",
+                options: [
+                    "aside",
+                    "header",
+                    "article",
+                    "area"
+                ],
+                correct: 2
+            },
+            {
+                question: "How to create hyperlink in HTML?",
+                options: [
+                    '<a href = "www.ljuniversity.com"> LJ University </a>',
+                    '<a link = "www.ljuniversity.com"> LJ University </a>',
+                    '<a url = "www.ljuniversity.com"> LJ University </a>',
+                    '<a> LJ University </a>'
+                ],
+                correct: 0
+            },
+            {
+                question: "Which element renders italic tag?",
+                options: [
+                    "<italic>",
+                    "<i>",
+                    "<it>",
+                    "<pre>"
+                ],
+                correct: 1
+            },
+            {
+                question: "How to create hyperlink in image?",
+                options: [
+                    '<a href="#"><img herf="image_path"/></a>',
+                    '<a href="#"><img src="image_path"/></a>',
+                    '<a link="#"><img src="image_path"/></a>',
+                    '<a src="#"><img src="image_path"/></a>'
+                ],
+                correct: 1
+            },
+            {
+                question: "Which attribute is used to give index to <ol> tag?",
+                options: [
+                    "index",
+                    "type",
+                    "number",
+                    "position"
+                ],
+                correct: 1
+            },
+            {
+                question: "Which of the following makes image clickable?",
+                options: [
+                    '<a href="https://www.sanfoundry.com/">Sanfoundry Home Page</a>',
+                    '<img src="https://www.sanfoundry.com/sanfoundrylogo"><a href="https://www.sanfoundry.com/">Sanfoundry Home Page</a></img>',
+                    '<a href="https://www.sanfoundry.com/">Sanfoundry Home Page</a><img src="https://www.sanfoundry.com/sanfoundry-logo" />',
+                    '<a href="https://www.sanfoundry.com/"><img src="https://www.sanfoundry.com/sanfoundry-logo" /></a>'
+                ],
+                correct: 3
+            },
+            {
+                question: "Which of the following is not a standalone tag?",
+                options: [
+                    "<hr>",
+                    "<b>",
+                    "<img>",
+                    "<br>"
+                ],
+                correct: 1
+            },
+            {
+                question: "Which is allowed attribute value to render small roman no. in ordered list?",
+                options: [
+                    '<ol type="I">',
+                    '<ol type="i">',
+                    '<ol type="roman">',
+                    '<ol type="number">'
+                ],
+                correct: 1
+            },
+            {
+                question: "<hr> tag in HTML is used for _______",
+                options: [
+                    "New line",
+                    "Vertical rule",
+                    "New paragraph",
+                    "Horizontal Rule"
+                ],
+                correct: 3
+            },
+            {
+                question: "Which of the following is the correct way to create list using lowercase letters?",
+                options: [
+                    '<ol alpha="a">',
+                    '<ol type="a">',
+                    '<ol letter="a">',
+                    'None of the mentioned'
+                ],
+                correct: 1
+            },
+            {
+                question: "Which of the following is way to start an ordered list with the count of numeric value 4?",
+                options: [
+                    '<ol type="1" start="4">',
+                    '<ol type="1" num="4">',
+                    '<ol type="1" begin="4">',
+                    '<ol type="1" initial="4">'
+                ],
+                correct: 0
+            },
+            {
+                question: "Which is the correct way to comment something in HTML?",
+                options: [
+                    "Using ## and #",
+                    "Using </-- and -/->",
+                    "Using <!-- and -->",
+                    "Using /* and */"
+                ],
+                correct: 2
+            },
+            {
+                question: "Which type attribute value is not allowed in unordered list?",
+                options: [
+                    "disc",
+                    "circle",
+                    "square",
+                    "bullet"
+                ],
+                correct: 3
+            },
+            {
+                question: "Which tag helps to display underlined text?",
+                options: [
+                    "<underline>",
+                    "<u>",
+                    "<br>",
+                    "<below-line>"
+                ],
+                correct: 1
+            },
+            {
+                question: "Which element displays superscript text?",
+                options: [
+                    "<sup>",
+                    "<superscript>",
+                    "<superscripted>",
+                    "<super>"
+                ],
+                correct: 0
+            },
+            {
+                question: "Which of the following tags do not require a terminator?",
+                options: [
+                    "<u>",
+                    "<br>",
+                    "<b>",
+                    "none"
+                ],
+                correct: 1
+            },
+            {
+                question: "To get the ordered list we use ______",
+                options: [
+                    "<h1>",
+                    "<ul>",
+                    "<ol>",
+                    "<ml>"
+                ],
+                correct: 2
+            },
+            {
+                question: "for unordered list, we use _______ tag.",
+                options: [
+                    "<ol>",
+                    "<tr>",
+                    "<th>",
+                    "<ul>"
+                ],
+                correct: 3
+            },
+            {
+                question: "_____ tag is used before beginning of the paragraph text.",
+                options: [
+                    "<textarea>",
+                    "<sup>",
+                    "<b>",
+                    "<p>"
+                ],
+                correct: 3
+            },
+            {
+                question: "which tag add row in table?",
+                options: [
+                    "<td>",
+                    "<td>",
+                    "<tr></tr>",
+                    "<th> </th>"
+                ],
+                correct: 2
+            },
+            {
+                question: "Which tag is used for numbered list?",
+                options: [
+                    "<ul>",
+                    "<ol>",
+                    "<list>",
+                    "none"
+                ],
+                correct: 1
+            },
+            {
+                question: "choose the HTML tag for smallest size heading.",
+                options: [
+                    "<h>",
+                    "<h1>",
+                    "<h6>",
+                    "<h2>"
+                ],
+                correct: 2
+            },
+            {
+                question: "Which HTML tag is used to insert an image?",
+                options: [
+                    '<img url="htmllogo.jpg" />',
+                    '<img alt="htmllogo.jpg" />',
+                    '<img src="htmllogo.jpg" />',
+                    '<img link="htmllogo.jpg" />'
+                ],
+                correct: 2
+            },
+            {
+                question: "HTML tags are surrounded by which type of brackets.",
+                options: [
+                    "{ }",
+                    "[ ]",
+                    "( )",
+                    "< >"
+                ],
+                correct: 3
+            },
+            {
+                question: "What does the abbreviation HTML stand for?",
+                options: [
+                    "HighText Machine Language",
+                    "HyperText and links Markup Language",
+                    "HyperText Markup Language",
+                    "None of these"
+                ],
+                correct: 2
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let selectedAnswer = null;
+        let answered = false;
+
+        function initQuiz() {
+            displayQuestion();
+        }
+
+        function displayQuestion() {
+            const quizContent = document.getElementById('quizContent');
+            const question = quizData[currentQuestion];
+            
+            quizContent.innerHTML = `
+                <div class="question-container fade-in">
+                    <div class="question-number">Question ${currentQuestion + 1} of ${quizData.length}</div>
+                    <div class="question-text">${question.question}</div>
+                    <div class="options-container" id="optionsContainer">
+                        ${question.options.map((option, index) => `
+                            <div class="option" onclick="selectAnswer(${index})" data-index="${index}">
+                                ${option}
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="navigation-buttons">
+                        <button class="btn btn-secondary" onclick="previousQuestion()" ${currentQuestion === 0 ? 'disabled' : ''}>
+                            ← Previous
+                        </button>
+                        <button class="btn btn-primary" onclick="nextQuestion()" id="nextBtn">
+                            ${currentQuestion === quizData.length - 1 ? 'Finish Quiz' : 'Next →'}
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            updateProgress();
+            selectedAnswer = null;
+            answered = false;
+        }
+
+        function selectAnswer(index) {
+            if (answered) return;
+
+            const options = document.querySelectorAll('.option');
+            const question = quizData[currentQuestion];
+            
+            selectedAnswer = index;
+            answered = true;
+
+            options.forEach((option, idx) => {
+                option.classList.add('disabled');
+                
+                if (idx === question.correct) {
+                    option.classList.add('correct');
+                }
+                
+                if (idx === index && idx !== question.correct) {
+                    option.classList.add('wrong');
+                }
+            });
+
+            if (index === question.correct) {
+                score++;
+            }
+        }
+
+        function nextQuestion() {
+            if (!answered) {
+                alert('Please select an answer before proceeding!');
+                return;
+            }
+
+            if (currentQuestion < quizData.length - 1) {
+                currentQuestion++;
+                displayQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                displayQuestion();
+            }
+        }
+
+        function updateProgress() {
+            const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
+            const percentage = ((currentQuestion + 1) / quizData.length) * 100;
+            progressFill.style.width = percentage + '%';
+            progressText.textContent = `Question ${currentQuestion + 1} of ${quizData.length}`;
+    }
+
+       function showResults() {
+          const percentage = Math.round((score / quizData.length) * 100);
+          let feedback = '';
+          let feedbackClass = '';
+
+          if (percentage >= 90) {
+            feedback = '🎉 Outstanding! You have mastered HTML Structure and Core Tags!';
+            feedbackClass = 'excellent';
+        } else if (percentage >= 75) {
+            feedback = '👍 Great job! You have a solid understanding of HTML fundamentals!';
+            feedbackClass = 'good';
+        } else if (percentage >= 50) {
+            feedback = '📚 Good effort! Review HTML tags and attributes to improve further!';
+            feedbackClass = 'average';
+        } else {
+            feedback = '💪 Keep practicing! Review Chapter 2 materials and try again!';
+            feedbackClass = 'poor';
+        }
+
+        const quizContent = document.getElementById('quizContent');
+        quizContent.innerHTML = `
+            <div class="result-container fade-in">
+                <div class="result-score">${percentage}%</div>
+                <div class="result-message">Quiz Complete!</div>
+                <div class="result-details">
+                    You scored <strong>${score}</strong> out of <strong>${quizData.length}</strong> questions
+                </div>
+                <div class="result-feedback ${feedbackClass}">
+                    ${feedback}
+                </div>
+                <button class="btn btn-primary" onclick="restartQuiz()">
+                    🔄 Try Again
+                </button>
+            </div>
+        `;
+
+        document.getElementById('progressFill').style.width = '100%';
+        document.getElementById('progressText').textContent = 'Completed!';
+    }
+
+    function restartQuiz() {
+        currentQuestion = 0;
+        score = 0;
+        selectedAnswer = null;
+        answered = false;
+        initQuiz();
+    }
+
+    // Initialize quiz on page load
+    initQuiz();
+</script>
