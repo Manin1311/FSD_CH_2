@@ -117,6 +117,8 @@
             background: white;
             position: relative;
             word-wrap: break-word;
+            display: flex;
+            align-items: center;
         }
 
         .option:hover:not(.correct):not(.wrong):not(.disabled) {
@@ -157,7 +159,6 @@
             border-radius: 50%;
             display: inline-block;
             margin-right: 12px;
-            vertical-align: middle;
             transition: all 0.3s ease;
             flex-shrink: 0;
         }
@@ -189,6 +190,10 @@
             justify-content: center;
             font-size: 14px;
             font-weight: bold;
+        }
+
+        .option-text {
+            flex: 1;
         }
 
         .navigation-buttons {
@@ -979,7 +984,7 @@
                     <div class="options-container" id="optionsContainer">
                         ${question.options.map((option, index) => `
                             <div class="option" onclick="selectAnswer(${index})" data-index="${index}">
-                                ${option}
+                                <span class="option-text">${option}</span>
                             </div>
                         `).join('')}
                     </div>
@@ -1045,63 +1050,67 @@
                 displayQuestion();
             }
         }
-
         function updateProgress() {
-            const progressFill = document.getElementById('progressFill');
-            const progressText = document.getElementById('progressText');
-            const percentage = ((currentQuestion + 1) / quizData.length) * 100;
-            progressFill.style.width = percentage + '%';
-            progressText.textContent = `Question ${currentQuestion + 1} of ${quizData.length}`;
-    }
+     const progressFill = document.getElementById('progressFill');
+     const progressText = document.getElementById('progressText');
+     const percentage = ((currentQuestion + 1) / quizData.length) * 100;
+     
+     progressFill.style.width = percentage + '%';
+     progressText.textContent = `Question ${currentQuestion + 1} of ${quizData.length}`;
+ }
 
-       function showResults() {
-          const percentage = Math.round((score / quizData.length) * 100);
-          let feedback = '';
-          let feedbackClass = '';
+ function showResults() {
+     const percentage = Math.round((score / quizData.length) * 100);
+     let feedback = '';
+     let feedbackClass = '';
 
-          if (percentage >= 90) {
-            feedback = '🎉 Outstanding! You have mastered HTML Structure and Core Tags!';
-            feedbackClass = 'excellent';
-        } else if (percentage >= 75) {
-            feedback = '👍 Great job! You have a solid understanding of HTML fundamentals!';
-            feedbackClass = 'good';
-        } else if (percentage >= 50) {
-            feedback = '📚 Good effort! Review HTML tags and attributes to improve further!';
-            feedbackClass = 'average';
-        } else {
-            feedback = '💪 Keep practicing! Review Chapter 2 materials and try again!';
-            feedbackClass = 'poor';
-        }
+     if (percentage >= 90) {
+         feedback = '🎉 Outstanding! You have mastered HTML Structure and Core Tags!';
+         feedbackClass = 'excellent';
+     } else if (percentage >= 75) {
+         feedback = '👍 Great job! You have a solid understanding of HTML fundamentals!';
+         feedbackClass = 'good';
+     } else if (percentage >= 50) {
+         feedback = '📚 Good effort! Review HTML tags and attributes to improve further!';
+         feedbackClass = 'average';
+     } else {
+         feedback = '💪 Keep practicing! Review Chapter 2 materials and try again!';
+         feedbackClass = 'poor';
+     }
 
-        const quizContent = document.getElementById('quizContent');
-        quizContent.innerHTML = `
-            <div class="result-container fade-in">
-                <div class="result-score">${percentage}%</div>
-                <div class="result-message">Quiz Complete!</div>
-                <div class="result-details">
-                    You scored <strong>${score}</strong> out of <strong>${quizData.length}</strong> questions
-                </div>
-                <div class="result-feedback ${feedbackClass}">
-                    ${feedback}
-                </div>
-                <button class="btn btn-primary" onclick="restartQuiz()">
-                    🔄 Try Again
-                </button>
-            </div>
-        `;
+     const quizContent = document.getElementById('quizContent');
+     quizContent.innerHTML = `
+         <div class="result-container fade-in">
+             <div class="result-score">${percentage}%</div>
+             <div class="result-message">Quiz Complete!</div>
+             <div class="result-details">
+                 You scored <strong>${score}</strong> out of <strong>${quizData.length}</strong> questions
+             </div>
+             <div class="result-feedback ${feedbackClass}">
+                 ${feedback}
+             </div>
+             <button class="btn btn-primary" onclick="restartQuiz()">
+                 🔄 Try Again
+             </button>
+         </div>
+     `;
 
-        document.getElementById('progressFill').style.width = '100%';
-        document.getElementById('progressText').textContent = 'Completed!';
-    }
+     document.getElementById('progressFill').style.width = '100%';
+     document.getElementById('progressText').textContent = 'Completed!';
+ }
 
-    function restartQuiz() {
-        currentQuestion = 0;
-        score = 0;
-        selectedAnswer = null;
-        answered = false;
-        initQuiz();
-    }
+ function restartQuiz() {
+     currentQuestion = 0;
+     score = 0;
+     selectedAnswer = null;
+     answered = false;
+     initQuiz();
+ }
 
-    // Initialize quiz on page load
-    initQuiz();
+ // Initialize quiz on page load
+ initQuiz();
 </script>
+
+
+</body>
+</html>
